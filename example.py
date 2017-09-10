@@ -1,12 +1,8 @@
-# Garterline
-Creating beautiful colored lines for your CLI
+from garterline import GarterLine
 
-```python
 delimiter = GarterLine(' ]-[ ', 'red').tie()
 line = GarterLine('Hello', delimiter=delimiter)
 line.append('World', 'green')
 line.append('!')
 example1 = GarterLine('[ ', 'default', delimiter=line.tie()).append(' ]')
 print(example1.tie())
-```
->  [ Hello ]-[ World ]-[ ! ]
