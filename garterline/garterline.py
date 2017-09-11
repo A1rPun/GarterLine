@@ -21,6 +21,8 @@ class GarterLine(object):
   # TODO: Implement self.getAttribute(self.attribute)
   def tie(self, delimiter=""):
     fmt = self.background + self.foreground
+    if isinstance(delimiter, GarterLine):
+      delimiter = delimiter.tie()
     garter = []
     for g in self.garter:
       if isinstance(g, GarterLine):
