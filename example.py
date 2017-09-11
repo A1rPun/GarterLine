@@ -12,12 +12,11 @@ example2 = GarterLine(percentReady90, "blue", "green")
 dlmtr = GarterLine(" ░ ", "black")
 print(example2.tie(dlmtr))
 
-blend = GarterLine("▶")
 coolStats = ["3000kg"]
 example3 = GarterLine(coolStats, "black", "blue")
-example3.append("6.000.000!!!", background="lightblue")
+example3.append("6.000.000!!!", background="lightblue", attribute="underlined")
 example3.append("more cool stats", background="cyan")
 example3.append("one more cool stat", background="lightcyan")
-print(example3.tie(blend, true))
+print(example3.tie("▶", blend=True))
 
 print(Ansi.attribute("all")["reset"] + ":)")

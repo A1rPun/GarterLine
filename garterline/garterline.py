@@ -18,15 +18,18 @@ class GarterLine(object):
     elif text:
       self.garter.append(text)
 
-  # TODO: Implement self.getAttribute(self.attribute)
-  def tie(self, delimiter=""):
-    fmt = self.background + self.foreground
-    if isinstance(delimiter, GarterLine):
-      delimiter = delimiter.tie()
+  def tie(self, text="", foreground="", background="", attribute="", blend=False):
+    fmtSet = self.background + self.foreground + self.attribute["apply"]
+    fmtReset = self.attribute["reset"]
+    if text:
+      if isinstance(text, GarterLine):
+        text = text.tie()
+      else:
+        text = GarterLine(text, foreground, background, attribute).tie()
     garter = []
     for g in self.garter:
       if isinstance(g, GarterLine):
-        garter.append(g.tie())
+        garter.append(fmtSet + g.tie() + fmtReset)
       else:
-        garter.append(fmt + g)
-    return fmt + delimiter.join(garter)
+        garter.append(fmtSet + g + fmtReset)
+    return text.join(garter)

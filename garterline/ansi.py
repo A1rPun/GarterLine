@@ -10,7 +10,7 @@ class Ansi(object):
         return ForegroundColor[color or 'none']
 
 Attributes = {
-    "none": {},
+    "none": { "apply": "", "reset": "", },
     "all": { "apply": "\e[1m\e[2m\e[4m\e[5m\e[7m\e[8m", "reset": "\e[0m" },
     "blink": { "apply": "\e[5m", "reset": "\e[25m" },
     "bold": { "apply": "\e[1m", "reset": "\e[21m" },
