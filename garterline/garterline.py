@@ -1,12 +1,12 @@
-from .ansi import Ansi
+from .bash import BashPrompt
 
 class GarterLine(object):
   def __init__(self, text="", foreground="", background="", attribute=""):
     self.garter = []
     self.text(text)
-    self.foreground = Ansi.foreground(foreground)
-    self.background = Ansi.background(background)
-    self.attribute = Ansi.attribute(attribute)
+    self.foreground = foreground
+    self.background = background
+    self.attribute = attribute
 
   def append(self, text="", foreground="", background="", attribute=""):
     self.text(GarterLine(text, foreground, background, attribute))
@@ -18,18 +18,24 @@ class GarterLine(object):
     elif text:
       self.garter.append(text)
 
-  def tie(self, text="", foreground="", background="", attribute="", blend=False):
-    fmtSet = self.background + self.foreground + self.attribute["apply"]
-    fmtReset = self.attribute["reset"]
-    if text:
-      if isinstance(text, GarterLine):
-        text = text.tie()
-      else:
-        text = GarterLine(text, foreground, background, attribute).tie()
-    garter = []
+  def tie(self, delimiter="", blend=False):
+    result = ""
+    fmtSet = BashPrompt.format(self.foreground, self.background, self.attribute)
+    fmtReset = BashPrompt.reset(self.attribute)
+    if delimiter and not isinstance(delimiter, GarterLine):
+      delimiter = GarterLine(delimiter)
+    lastIndex = len(self.garter) - 1
+    i=0
     for g in self.garter:
+      bg = self.background
       if isinstance(g, GarterLine):
-        garter.append(fmtSet + g.tie() + fmtReset)
-      else:
-        garter.append(fmtSet + g + fmtReset)
-    return text.join(garter)
+        bg = g.background
+        g = g.tie()
+      result += fmtSet + g + fmtReset
+      if delimiter and i < lastIndex:
+        if blend:
+          delimiter.foreground = bg
+          delimiter.background = self.garter[i+1].background
+        result += delimiter.tie()
+      i=i+1
+    return result

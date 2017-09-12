@@ -3,10 +3,9 @@ Creating beautiful colored lines for your CLI
 
 ```python
 delimiter = GarterLine(' ]-[ ', 'red').tie()
-line = GarterLine('Hello', delimiter=delimiter)
+line = GarterLine('Hello')
 line.append('World', 'green')
 line.append('!')
-example1 = GarterLine('[ ', 'default', delimiter=line.tie()).append(' ]')
-print(example1.tie())
+print(line.tie(delimiter))
 ```
->  [ Hello ]-[ World ]-[ ! ]
+>  Hello ]-[ World ]-[ !

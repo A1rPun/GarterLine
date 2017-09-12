@@ -1,22 +1,32 @@
-from garterline import Ansi, GarterLine
+from garterline import GarterLine
 
-line = GarterLine("Hello", "yellow")
-line.append("World", "green")
-line.append("!")
-example1 = GarterLine("[ ", "red").append(" ]")
-delimiter = GarterLine(" ]-[ ", "red")
-print(example1.tie(line.tie(delimiter)))
+def example1():
+    line = GarterLine("Hello", "yellow")
+    line.append("World", "green")
+    line.append("!")
+    result = GarterLine("[ ", "red").append(" ]")
+    delimiter = GarterLine(" ]-[ ", "red")
+    return result.tie(line.tie(delimiter))
 
-percentReady90 = ["In", "other", "words", "it's", "almost", "completed"]
-example2 = GarterLine(percentReady90, "blue", "green")
-dlmtr = GarterLine(" ░ ", "black")
-print(example2.tie(dlmtr))
+def example2():
+    percentReady90 = ["In", "other", "words", "it's", "almost", "completed"]
+    result = GarterLine(percentReady90, "blue", "green")
+    dlmtr = GarterLine(" ░ ", "black", "green")
+    return result.tie(dlmtr)
 
-coolStats = ["3000kg"]
-example3 = GarterLine(coolStats, "black", "blue")
-example3.append("6.000.000!!!", background="lightblue", attribute="underlined")
-example3.append("more cool stats", background="cyan")
-example3.append("one more cool stat", background="lightcyan")
-print(example3.tie("▶", blend=True))
+def example3():
+    result = GarterLine("SyntaxError:", "black", "blue")
+    result.append("(unicode error) 'unicodeescape'", background="lightblue", attribute="underlined")
+    result.append("codec can't decode bytes in position 0-1:", background="cyan")
+    result.append("truncated \\uXXXX escape", background="lightcyan")
+    return result.tie("▶", True)
 
-print(Ansi.attribute("all")["reset"] + ":)")
+def clear(msg=""):
+    return GarterLine(msg, attribute="reset").tie()
+
+#"Lisää viinaa silmät liikkuu :)"
+print(clear("GarterLine examples"))
+print(example1())
+print(example2())
+print(example3())
+print(clear())
