@@ -10,14 +10,17 @@ class BashPrompt(object):
         return EscapeSequences[sequence or 'none']
     @staticmethod
     def format(foreground="", background="", attribute=""):
-        fmt = ""
         formats = []
-        if foreground:
-            formats.append(BashPrompt.attribute(attribute)["apply"])
-        if background:
-            formats.append(BashPrompt.background(background))
-        if foreground:
-            formats.append(BashPrompt.foreground(foreground))
+        fg = BashPrompt.foreground(foreground)
+        bg = BashPrompt.background(background)
+        attr = BashPrompt.attribute(attribute)["apply"]
+        if attr:
+            formats.append(attr)
+        if bg:
+            formats.append(bg)
+        if fg:
+            formats.append(fg)
+        fmt = ""
         if len(formats):
             fmt = BashPrompt.escape("escape") + "[" + ";".join(formats) + "m"
         return fmt
@@ -26,7 +29,9 @@ class BashPrompt(object):
         return ForegroundColor[color or 'none']
     @staticmethod
     def reset(attribute=""):
-        return BashPrompt.escape("escape") + "[" + BashPrompt.attribute(attribute)["reset"] + "m"
+        fmt = BashPrompt.attribute(attribute)["reset"]
+        fmt = BashPrompt.escape("escape") + "[" + fmt + "m"
+        return fmt
 
 # TODO: All attribute test (hidden isnt logical)
 Attributes = {
