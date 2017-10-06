@@ -1,28 +1,34 @@
 from garterline import GarterLine
 
 def example1():
-    line = GarterLine("Hello", "yellow")
-    line.append("World", "green")
-    line.append("!")
-    result = GarterLine("[ ", "red").append(" ]")
-    delimiter = GarterLine(" ]-[ ", "red")
-    return result.tie(line.tie(delimiter))
+    line = GarterLine()
+    line.color("red")
+    line.text("Hello")
+    line.color("blue")
+    line.text("World")
+    return line
 
 def example2():
     percentReady90 = ["In", "other", "words", "it's", "almost", "completed"]
-    result = GarterLine(percentReady90, "blue", "green")
-    dlmtr = GarterLine(" ░ ", "black", "green")
-    return result.tie(dlmtr)
+    line = GarterLine()
+    line.color("blue", "green")
+    line.text(" ░ ".join(percentReady90))
+    return line
 
 def example3():
-    result = GarterLine("SyntaxError:", "black", "blue")
-    result.append("(unicode error) 'unicodeescape'", background="lightblue", attribute="underlined")
-    result.append("codec can't decode bytes in position 0-1:", background="cyan")
-    result.append("truncated \\uXXXX escape", background="lightcyan")
-    return result.tie("▶", True)
+    line = GarterLine()
+    line.color("black", "blue")
+    line.text("SyntaxError")
+    line.color(background="lightblue")
+    line.text("(unicode error) 'unicodeescape'")
+    line.color(background="cyan")
+    line.text("codec can't decode bytes in position 0-1")
+    line.color(background="lightcyan")
+    line.text("truncated \\uXXXX escape")
+    return line
 
 def clear(msg=""):
-    return GarterLine(msg, attribute="reset").tie()
+    return GarterLine().text(msg).color()
 
 #"Lisää viinaa silmät liikkuu :)"
 print(clear("GarterLine examples"))

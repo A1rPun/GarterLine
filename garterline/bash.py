@@ -1,42 +1,40 @@
 class BashPrompt(object):
     @staticmethod
     def attribute(attr):
-        return Attributes[attr or 'none']
+        try:
+            return Attributes[attr or "default"]["apply"]
+        except KeyError as e:
+            return attr
     @staticmethod
     def background(color):
-        return BackgroundColor[color or 'none']
+        try:
+            return BackgroundColor[color or "default"]
+        except KeyError as e:
+            return color
     @staticmethod
     def escape(sequence):
-        return EscapeSequences[sequence or 'none']
+        try:
+            return EscapeSequences[sequence or "escape"]
+        except KeyError as e:
+            return sequence
     @staticmethod
-    def format(foreground="", background="", attribute=""):
+    def color(foreground="", background="", attribute=""):
         formats = []
-        fg = BashPrompt.foreground(foreground)
-        bg = BashPrompt.background(background)
-        attr = BashPrompt.attribute(attribute)["apply"]
-        if attr:
-            formats.append(attr)
-        if bg:
-            formats.append(bg)
-        if fg:
-            formats.append(fg)
-        fmt = ""
-        if len(formats):
-            fmt = BashPrompt.escape("escape") + "[" + ";".join(formats) + "m"
-        return fmt
+        formats.append(BashPrompt.attribute(attribute))
+        formats.append(BashPrompt.background(background))
+        formats.append(BashPrompt.foreground(foreground))
+        # "\[" + + "m\]"
+        return BashPrompt.escape("") + "[" + ";".join(formats) + "m"
     @staticmethod
     def foreground(color):
-        return ForegroundColor[color or 'none']
-    @staticmethod
-    def reset(attribute=""):
-        fmt = BashPrompt.attribute(attribute)["reset"]
-        fmt = BashPrompt.escape("escape") + "[" + fmt + "m"
-        return fmt
+        try:
+            return ForegroundColor[color or "default"]
+        except KeyError as e:
+            return color
 
 # TODO: All attribute test (hidden isnt logical)
 Attributes = {
-    "none": { "apply": "", "reset": "", },
-    "reset": { "apply": "", "reset": "0" },
+    "default": { "apply": "0", "reset": "0" },
     "blink": { "apply": "5", "reset": "25" },
     "bold": { "apply": "1", "reset": "21" },
     "dim": { "apply": "2", "reset": "22" },
@@ -46,7 +44,6 @@ Attributes = {
 }
 
 ForegroundColor = {
-    "none": "",  
     "default": "39",
     "black": "30",
     "red": "31",
@@ -67,7 +64,6 @@ ForegroundColor = {
 }
 
 BackgroundColor = {
-    "none": "",
     "default": "49",
     "black": "40",
     "red": "41",
@@ -88,23 +84,22 @@ BackgroundColor = {
 }
 
 EscapeSequences = {
-    "none": "",
     "escape": "\e", # an ASCII escape character (033)
-    # SyntaxError: (unicode error) 'unicodeescape' codec can't decode bytes in position 0-1: truncated \uXXXX escape
+    # SyntaxError: (unicode error) "unicodeescape" codec can"t decode bytes in position 0-1: truncated \uXXXX escape
     "username": "\\u", # the username of the current user
-    "hostname": "\h", # the hostname up to the first `.'
-    "hostnameFull": "\H", # the hostname
+    "hostname": "\h", # the hostname up to the first `."
+    "fullhostname": "\H", # the hostname
     "version": "\v", # the version of bash (e.g., 2.00)
-    "versionFull": "\V", # the release of bash, version + patch level (e.g., 2.00.0)
-    "terminal": "\l", # the basename of the shell's terminal device name
+    "fullversion": "\V", # the release of bash, version + patch level (e.g., 2.00.0)
+    "terminal": "\l", # the basename of the shell"s terminal device name
     "directory": "\w", # the current working directory, with $HOME abbreviated with a tilde (uses the value of the PROMPT_DIRTRIM variable)
     "basedirectory": "\W", # the basename of the current working directory, with $HOME abbreviated with a tilde
-    "timeshorter": "\A", # the current time in 24-hour HH:MM format
-    "timeshort": "\t", # the current time in 24-hour HH:MM:SS format
     "time": "\@", # the current time in 12-hour am/pm format
-    "timeFull": "\T", # the current time in 12-hour HH:MM:SS format
+    "fulltime": "\T", # the current time in 12-hour HH:MM:SS format
+    "time24": "\A", # the current time in 24-hour HH:MM format
+    "fulltime24": "\t", # the current time in 24-hour HH:MM:SS format
     "date": "\d", # the date in "Weekday Month Date" format (e.g., "Tue May 26")
-    "dateFull": "\D", # the format is passed to strftime(3) and the result is inserted into the prompt string; an empty format results in a locale-specific time representation. The braces are required
+    "fulldate": "\D", # the format is passed to strftime(3) and the result is inserted into the prompt string; an empty format results in a locale-specific time representation. The braces are required
     "jobs": "\j",# the number of jobs currently managed by the shell
     "shell": "\s",# the name of the shell, the basename of $0 (the portion following the final slash)
     "history": "\!",# the history number of this command
